@@ -10,11 +10,11 @@ body {
   display: none;
   position: absolute;
   z-index: 1000;
-  background-color: #222;
+  background-color: none;
   box-shadow: 0 2px 5 px rgba(0, 0, 0, 0.2);
 }
 
-.context-menu button{
+.context-menu #create-button{
   display: block;
   border-radius: 10px;
   margin-bottom: 10px;
@@ -78,21 +78,24 @@ body {
   background: #111;
 }
 
-#delete-menu {
+.delete-menu {
   display: none;
   position: absolute;
-  background-color: #222;
-  border: 1px solid #333;
-  padding: 8px;
-  border-radius: 10px;
+  background: none;
+  border: none;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   z-index: 1000;
 }
-#deleteMenu div { 
-  padding: 8px 12px; 
-  display: flex;
+#delete-button{ 
+  display: block;
+  border-radius: 10px;
+  margin-bottom: 10px;
   background: #222;
-  cursor: pointer; 
+  color: #f5f5f5;
+  padding: 8pX;
+  border: 1px solid #333;
+  width: 100%;
+  text-align: center;
 }
 #deleteMenu div:hover {
   background-color: #111;

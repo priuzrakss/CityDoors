@@ -129,6 +129,38 @@ app.post('/save-item', (req, res) => {
   });
 });
 
+// Маршрут для удаления категории
+app.delete('/delete-category/:id', (req, res) => {
+  const categoryId = req.params.id;
+
+  fs.readFile(path.join(__dirname, 'data', 'categories.json'), 'utf8', (err, data) => {
+    if (err) {
+      console.error('Error reading data:', err);
+      res.status(500).send('Error reading data');
+      return;
+    }
+
+    let categories = [];
+    try {
+      categories = JSON.parse(data);
+    } catch (parseErr) {
+      console.error('Error parsing data:', parseErr);
+      res.status(500).send('Error parsing data');
+      return;
+    }
+
+    const categoryIndex = categories.findIndex(category => category.id === categoryId);
+    if (categoryIndex === -1) {
+      res.status(404).send('Category not found');
+      return;
+    }
+
+    categories.splice(categoryIndex, 1);
+    saveDataToFile('categories.json', categories, res);
+  });
+});
+
+
 // Маршрут для чтения всех данных
 app.get('/read-data', (req, res) => {
   fs.readFile(path.join(__dirname, 'data', 'categories.json'), 'utf8', (err, data) => {

@@ -1,33 +1,52 @@
+var id = null;
+
 document.addEventListener("DOMContentLoaded", function(){
   const container = document.getElementById("search-tree-container");
   const contextMenu = document.getElementById("context-menu");
   const deleteMenu = document.getElementById("delete-menu");
+  const deleteButton = document.getElementById("delete-button");
+  const createButton = document.getElementById("create-button");
+  
+
+  createButton.addEventListener("click", function(e){
+    createCategory();
+  });
+
+  deleteButton.addEventListener("click", function(e) {  
+    console.log(id);
+    deleteCategory(e.target.id);
+  });
+
   container.addEventListener("contextmenu", function(e){
     e.preventDefault();
     let target = e.target;
     if(target.classList.contains("category-element")){
+      id = e.target.id;
+      console.log(id);
+      contextMenu.style.display = "none";
+      deleteMenu.style.display = "none";
       contextMenu.style.left = e.pageX + "px";
       contextMenu.style.top = e.pageY + "px";
+      deleteMenu.style.left = (e.pageX) + "px";
+      deleteMenu.style.top = (e.pageY) + "px";
       contextMenu.style.display = "block";
       deleteMenu.style.display = "block";
-      //console.log(e);
       console.log(e.target.classList.contains);
-    }
-    else{
+    } else {
+      contextMenu.style.display = "none";
+      deleteMenu.style.display = "none";
       contextMenu.style.left = e.pageX + "px";
       contextMenu.style.top = e.pageY + "px";
       contextMenu.style.display = "block";
     }
-    
   });
 
   document.addEventListener("click", function(e) {
-    if (e.target.closest("#contextMenu") === null) {  // Проверяем, не находится ли кликнутый элемент внутри контекстного меню
-      contextMenu.style.display = "none";  // Скрываем контекстное меню
+    if (e.target.closest("#context-menu") === null) {  
+      contextMenu.style.display = "none";
       deleteMenu.style.display = "none";
     }
   });
-  
   
 });
 
@@ -51,15 +70,15 @@ function loadItems() {
     data.forEach(category => {
       const categoryElement = document.createElement('div');
       categoryElement.innerHTML = `<h2>${category.name}</h2>`;
-      categoryElement.className = "category-element"
+      categoryElement.className = "category-element";
       categoryElement.id = `${category.id}`;
       container.appendChild(categoryElement);
     });
   };
-
-  // Вызов функции fetchData для запроса данных
   fetchData();
 }
+
+
 
 
 function categoryInit(){
@@ -87,6 +106,35 @@ function createCategory(){
   document.getElementById("category-display").style.display = "flex";
   document.getElementById("context-menu").style.display = "none"
 }
+
+// Функция для удаления категории по id
+function deleteCategory() {
+  fetch(`/delete-category/${id}`, {
+    method: 'DELETE'
+  })
+  .then(response => {
+    if (response.ok) {
+      return response.text();
+    } else {
+      throw new Error('Error deleting category');
+    }
+  })
+  .then(data => {
+    console.log(data);
+    // Дополнительные действия после успешного удаления
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+  location.reload();
+}
+
+// Пример вызова функции удаления при нажатии на кнопку
+document.getElementById('delete-button').addEventListener('click', function() {
+  const categoryId = 'ID_КАТЕГОРИИ'; // Здесь замените на реальный id категории
+  deleteCategory(categoryId);
+});
+
 
 function addCategory(){
   const CategoryContiner = document.getElementById("category-display");
