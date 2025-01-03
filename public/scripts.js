@@ -1,19 +1,66 @@
 document.addEventListener("DOMContentLoaded", function(){
   const container = document.getElementById("search-tree-container");
   const contextMenu = document.getElementById("context-menu");
-
-  
+  const deleteMenu = document.getElementById("delete-menu");
   container.addEventListener("contextmenu", function(e){
     e.preventDefault();
-    contextMenu.style.display = "block";
+    let target = e.target;
+    if(target.classList.contains("category-element")){
+      contextMenu.style.left = e.pageX + "px";
+      contextMenu.style.top = e.pageY + "px";
+      contextMenu.style.display = "block";
+      deleteMenu.style.display = "block";
+      //console.log(e);
+      console.log(e.target.classList.contains);
+    }
+    else{
+      contextMenu.style.left = e.pageX + "px";
+      contextMenu.style.top = e.pageY + "px";
+      contextMenu.style.display = "block";
+    }
+    
   });
 
-  document.addEventListener("click", function(e){
-    if(e.target.closest("#context-menu") === null){
-      contextMenu.style.display = "none";
+  document.addEventListener("click", function(e) {
+    if (e.target.closest("#contextMenu") === null) {  // Проверяем, не находится ли кликнутый элемент внутри контекстного меню
+      contextMenu.style.display = "none";  // Скрываем контекстное меню
+      deleteMenu.style.display = "none";
     }
   });
+  
+  
 });
+
+function loadItems() {
+  const fetchData = () => {
+    fetch('/read-data')
+      .then(response => response.json())
+      .then(data => {
+        console.log("Fetched data:", data);
+        displayData(data);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  };
+
+  const displayData = (data) => {
+    const container = document.getElementById('search-tree');
+    container.innerHTML = '';
+
+    data.forEach(category => {
+      const categoryElement = document.createElement('div');
+      categoryElement.innerHTML = `<h2>${category.name}</h2>`;
+      categoryElement.className = "category-element"
+      categoryElement.id = `${category.id}`;
+      container.appendChild(categoryElement);
+    });
+  };
+
+  // Вызов функции fetchData для запроса данных
+  fetchData();
+}
+
 
 function categoryInit(){
   const nameCategory = document.createElement("input");
@@ -50,26 +97,27 @@ function addCategory(){
   const categoryData = {
     name: document.getElementById('category-name').value
   };
-
-  fetch('/save-category', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(categoryData)
-  })
-  .then(response => response.text())
-  .then(result => {
-    console.log('Success:', result);
-  })
-  .catch(error => {
-    console.error('Error:', error);
-  });
+  if(categoryData.name === ""){
+    return;
+  }
+  else{
+    fetch('/save-category', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(categoryData)
+    })
+    .then(response => response.text())
+    .then(result => {
+      console.log('Success:', result);
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+  }
+  location.reload();
 }
 
-
-
-
-
-
 categoryInit();
+loadItems();

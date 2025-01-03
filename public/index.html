@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, initial-scale=1.0, maximum-scale=1.0">
@@ -10,19 +10,22 @@
   <h1 class="logo">CityDoors</h1>
   <div id="layout">
     <div id="search-tree-container">
-      <input type="text" id="search" placeholder="Поиск...">
-      <div id="context-menu" class="context-menu">
-        <button onclick="createCategory()">Создать категорию</button>
-      </div>
+      <input type="text" id="search" placeholder="Поиск..." required>
+      
       <div id="category-display" class="category-display"></div> 
       <div id="search-tree">
       </div>
-
-
     </div>
+    
     <div id="objects-container">
       
     </div>
+  </div>
+  <div id="context-menu" class="context-menu">
+    <button onclick="createCategory()">Создать категорию</button>
+  </div>
+  <div id = "delete-menu">
+      <div id = "delete-category">Удалить категорию</div>
   </div>
   <script src="/scripts.js"></script>
 </body>
